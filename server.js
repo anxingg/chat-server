@@ -7,7 +7,7 @@ var ProtoBuf = require("protobufjs");
 
 // Initialize from .proto file
 var builder = ProtoBuf.loadProtoFile(path.join(__dirname, "www", "chat.proto")),
-    Message = builder.build("Message");
+    ChatMessage = builder.build("ChatMessage");
     
 // 1. chatServer sockjs server
 var chatServer_sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
@@ -17,7 +17,7 @@ chatServer_sockjs.on('connection', function(conn) {
     conn.on('data', function(data) {
     try {
             // Decode the Message
-            var msg = Message.decode(data);
+            var msg = ChatMessage.decode(data);
             console.log("Received: "+msg.msgContent);
             // Re-encode it and send it back
             conn.write(msg.toBuffer());
