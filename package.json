@@ -1,0 +1,16 @@
+{
+        "name": "chat-server",
+        "description": "chat-server is online seatwork chat server",
+        "version": "0.0.1",
+        "author": {
+                "name": "anxing"
+        },
+        "dependencies": {
+                "node-static": "0.5.9",
+                "sockjs": "0.3.16",
+                "protobufjs": "~3"
+        },
+        "scripts": {
+                "run": "node server.js"
+        }
+}

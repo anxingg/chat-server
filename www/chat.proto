@@ -1,0 +1,6 @@
+message ChatMessage {
+    required int32 msgCode = 1 ;  //消息代码。1:对话消息;2：命令消息
+	required int32 msgType = 2 ;  //消息类型。1：文本;2:json;3:byte
+	optional string msgTag = 3 ;  //消息标记。可以用来传递一些额外的参数,各个消息进行自解释
+	required string msgContent = 4 ;  //消息内容，
+}
