@@ -70,19 +70,15 @@
 
         sockjs.onopen    = function()  {print('[*] open', sockjs.protocol);};
         sockjs.onmessage = function(e) {
-            var msg = ChatMessage.decode(e.data);
+            var msg = ChatMessage.decode64(e.data);
             print('[.] receive message', msg.msgContent);
         };
         sockjs.onclose   = function()  {print('[*] close');};
 
         form.submit(function() {
             print('[ ] sending', inp.val());
-            var msg = new ChatMessage(inp.val());
-            //msg.msgCode = 1;
-            //msg.msgType = 1;
-            //msg.msgTag = '';
-            //msg.msgContent = inp.val();
-            sockjs.send(msg.toBuffer());
+            var msg = new ChatMessage(1,1,"",inp.val());
+            sockjs.send(msg.encode64());
             inp.val('');
             return false;
         });

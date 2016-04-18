@@ -17,10 +17,10 @@ chatServer_sockjs.on('connection', function(conn) {
     conn.on('data', function(data) {
     try {
             // Decode the Message
-            var msg = ChatMessage.decode(data);
+            var msg = ChatMessage.decode64(data);
             console.log("Received: "+msg.msgContent);
             // Re-encode it and send it back
-            conn.write(msg.toBuffer());
+            conn.write(msg.encode64());
             console.log("Sent: "+msg.msgContent);
         } catch (err) {
             console.log("Processing failed:", err);
