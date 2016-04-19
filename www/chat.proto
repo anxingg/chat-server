@@ -1,3 +1,29 @@
+message LoginRequest
+{
+	required string username = 1;
+	required string password = 2;
+}
+message LoginResponse 
+{
+	required bool result = 1;
+	optional bytes errorDescription = 2;
+}
+message Request
+{// 包含所有的 XXXRequest消息
+	optional LoginRequest loginRequest = 1;
+}
+message Response
+{// 包含所有的Response消息
+	optional LoginResponse loginResponse = 1;
+}
+message Message
+{
+   required string type = 1;
+   required fixed32 sequence = 2;
+    
+   optional Request request = 3;
+   optional Response response = 4;
+}
 message ChatMessage {
     required int32 msgCode = 1 ;  //消息代码。1:对话消息;2：命令消息
 	required int32 msgType = 2 ;  //消息类型。1：文本;2:json;3:byte
