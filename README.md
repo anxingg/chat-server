@@ -1,4 +1,4 @@
-chat-server :在线客服聊天服务端
+chat-server :online chat group
 ========================
 
 To run this application, first install dependencies:

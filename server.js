@@ -7,7 +7,9 @@ var ProtoBuf = require("protobufjs");
 
 // Initialize from .proto file
 var builder = ProtoBuf.loadProtoFile(path.join(__dirname, "www", "chat.proto")),
-    ChatMessage = builder.build("ChatMessage");
+    ChatMessage = builder.build("ChatMessage"),
+    Message = builder.build("Message"),Request = builder.build("Request"),
+    LoginRequest = builder.build("LoginRequest"),LoginResponse = builder.build("LoginResponse");
     
 // 1. chatServer sockjs server
 var chatServer_sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};

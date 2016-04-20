@@ -5,13 +5,19 @@
     <script src="./Long.min.js"></script>
     <script src="./ByteBufferAB.min.js"></script> 
     <script src="./ProtoBuf.min.js"></script>
+    <script src="./MessageHandler.js"></script>
     <script>
         if (typeof dcodeIO === 'undefined' || !dcodeIO.ProtoBuf) {
             throw(new Error("ProtoBuf.js is not present. Please see www/index.html for manual setup instructions."));
         }
         // Initialize ProtoBuf.js
         var ProtoBuf = dcodeIO.ProtoBuf;
-        var ChatMessage = ProtoBuf.loadProtoFile('./chat.proto').build('ChatMessage');
+        var builder = ProtoBuf.loadProtoFile('./chat.proto');
+        var ChatMessage = builder.build('ChatMessage');
+        var Request = builder.build("Request");
+        var LoginRequest = builder.build("LoginRequest");
+        var LoginResponse = builder.build("LoginResponse");
+        alert();
     </script>
     
     <style>

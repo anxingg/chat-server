@@ -5,15 +5,17 @@ message LoginRequest
 }
 message LoginResponse 
 {
-	required bool result = 1;
+	required int32 result = 1;
 	optional bytes errorDescription = 2;
 }
+// 包含所有的 XXXRequest消息
 message Request
-{// 包含所有的 XXXRequest消息
+{
 	optional LoginRequest loginRequest = 1;
 }
+// 包含所有的Response消息
 message Response
-{// 包含所有的Response消息
+{
 	optional LoginResponse loginResponse = 1;
 }
 message Message
