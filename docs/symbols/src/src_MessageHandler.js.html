@@ -1,0 +1,140 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * The MessageHandler namespace.
+<span class='line'>  3</span>  * @exports MessageHandler
+<span class='line'>  4</span>  * @namespace MessageHandler
+<span class='line'>  5</span>  * @expose
+<span class='line'>  6</span>  */</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">node_static</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'node-static'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">path</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">"path"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ProtoBuf</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">"protobufjs"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 10</span> 
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="COMM">// Initialize from .proto file</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">builder</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">ProtoBuf.loadProtoFile</span><span class="PUNC">(</span><span class="NAME">path.join</span><span class="PUNC">(</span><span class="NAME">__dirname</span><span class="PUNC">,</span><span class="STRN">"../www"</span><span class="PUNC">,</span><span class="STRN">"chat.proto"</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Message</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">builder.build</span><span class="PUNC">(</span><span class="STRN">"Message"</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="NAME">Request</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">builder.build</span><span class="PUNC">(</span><span class="STRN">"Request"</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="NAME">LoginRequest</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">builder.build</span><span class="PUNC">(</span><span class="STRN">"LoginRequest"</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="NAME">LoginResponse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">builder.build</span><span class="PUNC">(</span><span class="STRN">"LoginResponse"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">    </span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> 
+<span class='line'> 18</span> </span><span class="COMM">//protocol type constants</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="COMM">/**
+<span class='line'> 20</span>  * @description message constants
+<span class='line'> 21</span>  */</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">CMConstants</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="COMM">/**
+<span class='line'> 24</span>  * @description unknown message
+<span class='line'> 25</span>  * @type {string}
+<span class='line'> 26</span>  * @const
+<span class='line'> 27</span>  */</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="NAME">CMConstants.UNKNOWN</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"UNKNOWN"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="COMM">/**
+<span class='line'> 30</span>  * @description loginRequest message
+<span class='line'> 31</span>  * @type {string}
+<span class='line'> 32</span>  * @const
+<span class='line'> 33</span>  */</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="NAME">CMConstants.LOGINREQUEST</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"LOGINREQUEST"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="COMM">/**
+<span class='line'> 36</span>  * @description loginResponse message
+<span class='line'> 37</span>  * @type {string}
+<span class='line'> 38</span>  * @const
+<span class='line'> 39</span>  */</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="NAME">CMConstants.LOGINRESPONSE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"LOGINRESPONSE"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> 
+<span class='line'> 42</span> </span><span class="COMM">//base handler</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">CMBaseHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="NAME">CMBaseHandler.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants.UNKNOWN</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="NAME">CMBaseHandler.handlers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 46</span> 
+<span class='line'> 47</span> </span><span class="COMM">/**
+<span class='line'> 48</span>  * @description process message
+<span class='line'> 49</span>  * @param {Message} message
+<span class='line'> 50</span>  * @example 
+<span class='line'> 51</span>  */</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="NAME">CMBaseHandler.process</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">message</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"CMBaseHandler.process:"</span><span class="PUNC">+</span><span class="NAME">message.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="NAME">CMBaseHandler.register</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">handler</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"CMBaseHandler.register:"</span><span class="PUNC">+</span><span class="NAME">handler.type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">    </span><span class="NAME">this.handlers</span><span class="PUNC">[</span><span class="NAME">handler.type</span><span class="PUNC">]</span><span class="PUNC">=</span><span class="NAME">handler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="NAME">CMBaseHandler.execute</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">message</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">handler</span><span class="PUNC">=</span><span class="NAME">this.handlers</span><span class="PUNC">[</span><span class="NAME">message.type</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"CMBaseHandler.execute:"</span><span class="PUNC">+</span><span class="NAME">handler.type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">handler</span><span class="PUNC">!=</span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="NAME">handler.process</span><span class="PUNC">(</span><span class="NAME">message</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 66</span> 
+<span class='line'> 67</span> </span><span class="COMM">//login request handler</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">CMLoginRequestHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="NAME">CMLoginRequestHandler.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMBaseHandler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="NAME">CMLoginRequestHandler.process</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">message</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"CMLoginRequestHandler.process:"</span><span class="PUNC">+</span><span class="NAME">message.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="NAME">CMLoginRequestHandler.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants.LOGINREQUEST</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> 
+<span class='line'> 75</span> </span><span class="COMM">//login response handler</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">CMLoginResponseHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="NAME">CMLoginResponseHandler.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMBaseHandler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="NAME">CMLoginResponseHandler.process</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">message</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"CMLoginResponseHandler.process:"</span><span class="PUNC">+</span><span class="NAME">message.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="NAME">CMLoginResponseHandler.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants.LOGINRESPONSE</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> 
+<span class='line'> 83</span> </span><span class="COMM">//register all handler</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="NAME">CMBaseHandler.register</span><span class="PUNC">(</span><span class="NAME">CMBaseHandler</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="NAME">CMBaseHandler.register</span><span class="PUNC">(</span><span class="NAME">CMLoginRequestHandler</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="NAME">CMBaseHandler.register</span><span class="PUNC">(</span><span class="NAME">CMLoginResponseHandler</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 87</span> 
+<span class='line'> 88</span> </span><span class="COMM">//message create factory</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">MessageFactory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> </span><span class="COMM">//message sequence global var</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="NAME">MessageFactory._sequence</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> 
+<span class='line'> 94</span> </span><span class="COMM">//increment sequence</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="NAME">MessageFactory.incSequence</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">    </span><span class="NAME">this._sequence</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._sequence</span><span class="PUNC">+</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._sequence</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="COMM">//create login request message</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="NAME">MessageFactory.createLoginRequest</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">username</span><span class="PUNC">,</span><span class="NAME">password</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">message</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Message</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">loginRequest</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">LoginRequest</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">request</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Request</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">    </span><span class="NAME">request.loginRequest</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">loginRequest</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">    </span><span class="NAME">loginRequest.username</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">username</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">    </span><span class="NAME">loginRequest.password</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">password</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">    </span><span class="NAME">message.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants.LOGINREQUEST</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">    </span><span class="NAME">message.sequence</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.incSequence</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">    </span><span class="NAME">message.request</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">request</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="COMM">//create login response message</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="NAME">MessageFactory.createLoginResponse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">sequence</span><span class="PUNC">,</span><span class="NAME">result</span><span class="PUNC">,</span><span class="NAME">errorDescription</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">message</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Message</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">loginResponse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">LoginResponse</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">response</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Response</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">    </span><span class="NAME">response.loginResponse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">loginResponse</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="WHIT">    </span><span class="NAME">loginResponse.result</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">result</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">    </span><span class="NAME">loginResponse.errorDescription</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">errorDescription</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">    </span><span class="NAME">message.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants.LOGINRESPONSE</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">    </span><span class="NAME">message.sequence</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sequence</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">    </span><span class="NAME">message.request</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">request</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">message</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>125</span> 
+<span class='line'>126</span> 
+<span class='line'>127</span> </span><span class="COMM">//exports variable</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="NAME">exports.CMBaseHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMBaseHandler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="NAME">exports.CMLoginRequestHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMLoginRequestHandler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="NAME">exports.CMLoginResponseHandler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMLoginResponseHandler</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="NAME">exports.CMConstants</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">CMConstants</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="NAME">exports.MessageFactory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">MessageFactory</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> </span></pre></body></html>

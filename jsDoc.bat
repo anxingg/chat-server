@@ -1,0 +1,1 @@
+java -jar D:/jsdoc-toolkit/jsrun.jar D:/jsdoc-toolkit/app/run.js -a -t=D:/jsdoc-toolkit/templates/jsdoc ./src/*.js -d=./docs
