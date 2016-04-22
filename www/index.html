@@ -12,12 +12,8 @@
         }
         // Initialize ProtoBuf.js
         var ProtoBuf = dcodeIO.ProtoBuf;
-        var builder = ProtoBuf.loadProtoFile('./chat.proto');
-        var ChatMessage = builder.build('ChatMessage');
-        var Request = builder.build("Request");
-        var LoginRequest = builder.build("LoginRequest");
-        var LoginResponse = builder.build("LoginResponse");
-        alert();
+        var messageHandler=MessageHandler;
+        messageHandler.init(ProtoBuf,'./chat.proto');
     </script>
     
     <style>
@@ -76,15 +72,16 @@
 
         sockjs.onopen    = function()  {print('[*] open', sockjs.protocol);};
         sockjs.onmessage = function(e) {
-            var msg = ChatMessage.decode64(e.data);
-            print('[.] receive message', msg.msgContent);
+            var msg = messageHandler.decode(e.data);
+            print('[.] receive message', msg.type);
         };
         sockjs.onclose   = function()  {print('[*] close');};
 
         form.submit(function() {
             print('[ ] sending', inp.val());
-            var msg = new ChatMessage(1,1,"",inp.val());
-            sockjs.send(msg.encode64());
+            //var msg = new messageHandler.ChatMessage(1,1,"",inp.val());
+            var msg = messageHandler.MessageFactory.createLoginRequest("anxingg","123456");
+            sockjs.send(messageHandler.encode(msg));
             inp.val('');
             return false;
         });

@@ -2,22 +2,10 @@
 <html><head>
     <script src="http://cdn.bootcss.com/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"></script>
-    <script src="./Long.min.js"></script>
-    <script src="./ByteBufferAB.min.js"></script> 
-    <script src="./ProtoBuf.min.js"></script>
-    <script src="./MyModule.js"></script>
-    <script >
-        /*
-        if (typeof dcodeIO === 'undefined' || !dcodeIO.ProtoBuf) {
-                    throw(new Error("ProtoBuf.js is not present. Please see www/index.html for manual setup instructions."));
-                }
-        // Initialize ProtoBuf.js
-        var ProtoBuf = dcodeIO.ProtoBuf;
-        var builder = ProtoBuf.loadProtoFile('./chat.proto');
-        */
-        MyModule.DemoFun();
-        console.log(MyModule.CMConstants.UNKNOWN);
-    </script>
+    <script src="../Long.min.js"></script>
+    <script src="../ByteBufferAB.min.js"></script> 
+    <script src="../ProtoBuf.min.js"></script>
+    <script src="http://cdn.bootcss.com/require.js/2.1.21/require.js" data-main="testAMD.js"></script>
     <style>
       .box {
           width: 300px;

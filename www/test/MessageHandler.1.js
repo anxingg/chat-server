@@ -4,11 +4,14 @@
  * @namespace MessageHandler
  * @expose
  */
+//var path = require("path");
+//var ProtoBuf = require("protobufjs");
 
 var Message ,Request,
     LoginRequest,LoginResponse
     ;
 var init = function (ProtoBuf,path){
+    console.log("MessageHandler init");
     // Initialize from .proto file
     var builder = ProtoBuf.loadProtoFile(path);
 
@@ -20,25 +23,14 @@ var init = function (ProtoBuf,path){
     CMBaseHandler.register(CMLoginRequestHandler);
     CMBaseHandler.register(CMLoginResponseHandler);
 }
+/*
+// Initialize from .proto file
+var builder = ProtoBuf.loadProtoFile(path.join(__dirname,"../www","chat.proto"));
 
-/**
- * @description encode message
- * @param {Message} message
- * @return {string}
- */
-var encode = function(message){
-    return message.encode64();
-}
-
-/**
- * @description decode message
- * @param {string} data
- * @return {Message}
- */
-var decode = function(data){
-    return Message.decode64(data);
-}
-
+var Message = builder.build("Message"),Request = builder.build("Request"),
+    LoginRequest = builder.build("LoginRequest"),LoginResponse = builder.build("LoginResponse")
+    ;
+*/
 //protocol type constants
 /**
  * @description message constants
@@ -77,6 +69,7 @@ CMBaseHandler.process = function(message){
     console.log("CMBaseHandler.process:"+message.type);
 }
 CMBaseHandler.register = function(handler){
+    console.log("CMBaseHandler.register:"+handler.type);
     this.handlers[handler.type]=handler;
 }
 CMBaseHandler.execute = function(message){
@@ -103,6 +96,12 @@ CMLoginResponseHandler.process = function(message){
 }
 CMLoginResponseHandler.type = CMConstants.LOGINRESPONSE;
 
+/*
+//register all handler
+CMBaseHandler.register(CMBaseHandler);
+CMBaseHandler.register(CMLoginRequestHandler);
+CMBaseHandler.register(CMLoginResponseHandler);
+*/
 //message create factory
 var MessageFactory = {};
 
@@ -143,8 +142,10 @@ MessageFactory.createLoginResponse = function(sequence,result,errorDescription){
 
 var MessageHandler = {
     init : init,
-    encode : encode,
-    decode : decode,
+    Message : Message,
+    Request : Request,
+    LoginRequest : LoginRequest,
+    LoginResponse :LoginResponse,
     CMBaseHandler : CMBaseHandler,
     CMLoginRequestHandler : CMLoginRequestHandler,
     CMLoginResponseHandler : CMLoginResponseHandler,
@@ -164,3 +165,18 @@ else if ( typeof window === "object" && typeof window.document === "object" ) {
 else{
     global["MessageHandler"] = MessageHandler;    
 } 
+/*
+var MessageHandler = {
+    CMBaseHandler : CMBaseHandler,
+    CMLoginRequestHandler = CMLoginRequestHandler,
+    CMLoginResponseHandler = CMLoginResponseHandler,
+    CMConstants = CMConstants,
+    MessageFactory = MessageFactory
+};
+//exports variable
+exports.CMBaseHandler = CMBaseHandler;
+exports.CMLoginRequestHandler = CMLoginRequestHandler;
+exports.CMLoginResponseHandler = CMLoginResponseHandler;
+exports.CMConstants = CMConstants;
+exports.MessageFactory = MessageFactory;
+*/
