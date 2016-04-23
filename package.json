@@ -10,7 +10,8 @@
                 "sockjs": "0.3.16",
                 "protobufjs": "~3",
                 "chai": "~3.4.1",
-                "mocha": "~2.3.4"
+                "mocha": "~2.3.4",
+                "moment": "2.13.0"
         },
         "scripts": {
                 "run": "node server.js"

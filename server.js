@@ -3,17 +3,12 @@ var sockjs = require('sockjs');
 var node_static = require('node-static');
 var path = require("path");
 var ProtoBuf = require("protobufjs");
-var messageHandler =require("./src/MessageHandler");
-
+var messageHandler = require("./src/MessageHandler");
+var serverTalk = require("./src/ServerTalk");
 // Initialize from .proto file
-/*
-var builder = ProtoBuf.loadProtoFile(path.join(__dirname, "www", "chat.proto")),
-    ChatMessage = builder.build("ChatMessage"),
-    Message = builder.build("Message"),Request = builder.build("Request"),
-    LoginRequest = builder.build("LoginRequest"),LoginResponse = builder.build("LoginResponse");
-*/
-messageHandler.init(ProtoBuf,path.join(__dirname,"www","chat.proto"));
 
+messageHandler.init(ProtoBuf,path.join(__dirname,"www","chat.proto"));
+messageHandler.CMLoginRequestHandler.process = serverTalk.onLogin;
 // 1. chatServer sockjs server
 var chatServer_sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
 
@@ -24,11 +19,14 @@ chatServer_sockjs.on('connection', function(conn) {
             // Decode the Message
             var msg = messageHandler.decode(data);
             console.log("Received: "+msg.type);
-            // Re-encode it and send it back
-            conn.write(messageHandler.encode(msg));
-            console.log("Sent: "+msg.type);
+            var response = messageHandler.execute(conn,msg);
+            if(response!=null){
+                conn.write(messageHandler.encode(response));  
+                console.log("Sent: "+response.type);  
+            }
         } catch (err) {
-            console.log("Processing failed:", err);
+            console.log("Processing failed:", err.message);
+            throw err;
         }
     });
 });
@@ -49,3 +47,5 @@ chatServer_sockjs.installHandlers(server, {prefix:'/chatServer'});
 
 console.log(' [*] Listening on 0.0.0.0:9999' );
 server.listen(9999, '0.0.0.0');
+
+console.log("chat server start ok :"+new Date());

@@ -5,16 +5,17 @@
  * @expose
  */
 
-var Message ,Request,
-    LoginRequest,LoginResponse
-    ;
+var Message ,Request,Response,
+    LoginRequest,LoginResponse;
 var init = function (ProtoBuf,path){
     // Initialize from .proto file
     var builder = ProtoBuf.loadProtoFile(path);
 
-    Message = builder.build("Message");Request = builder.build("Request");
-    LoginRequest = builder.build("LoginRequest");LoginResponse = builder.build("LoginResponse")
-    ;
+    Message = builder.build("Message");
+    Request = builder.build("Request");
+    Response =builder.build("Response");
+    LoginRequest = builder.build("LoginRequest");
+    LoginResponse = builder.build("LoginResponse");
     //register all handler
     CMBaseHandler.register(CMBaseHandler);
     CMBaseHandler.register(CMLoginRequestHandler);
@@ -73,33 +74,36 @@ CMBaseHandler.handlers = {};
  * @param {Message} message
  * @example 
  */
-CMBaseHandler.process = function(message){
+CMBaseHandler.process = function(con,message){
     console.log("CMBaseHandler.process:"+message.type);
 }
 CMBaseHandler.register = function(handler){
     this.handlers[handler.type]=handler;
 }
-CMBaseHandler.execute = function(message){
+CMBaseHandler.execute = function(con,message){
+    console.log("CMBaseHandler.execute:message= "+message);
     var handler=this.handlers[message.type];
-    console.log("CMBaseHandler.execute:"+handler.type);
+    console.log("CMBaseHandler.execute:handler= "+handler.type);
     if(handler!=undefined){
-        handler.process(message);
+        return handler.process(con,message);
     }
+    else
+        return undefined;
 }
 
 //login request handler
 var CMLoginRequestHandler = {};
-CMLoginRequestHandler.prototype = CMBaseHandler;
-CMLoginRequestHandler.process = function(message){
+CMLoginRequestHandler.process = function(con,message){
     console.log("CMLoginRequestHandler.process:"+message.type);
+    return undefined;
 }
 CMLoginRequestHandler.type = CMConstants.LOGINREQUEST;
 
 //login response handler
 var CMLoginResponseHandler = {}
-CMLoginResponseHandler.prototype = CMBaseHandler;
-CMLoginResponseHandler.process = function(message){
+CMLoginResponseHandler.process = function(con,message){
     console.log("CMLoginResponseHandler.process:"+message.type);
+    return undefined;
 }
 CMLoginResponseHandler.type = CMConstants.LOGINRESPONSE;
 
@@ -115,11 +119,12 @@ MessageFactory.incSequence = function(){
     return this._sequence;
 }
 //create login request message
-MessageFactory.createLoginRequest = function(username,password){
+MessageFactory.createLoginRequest = function(userid,username,password){
     var message =new Message();
     var loginRequest = new LoginRequest();
     var request = new Request();
     request.loginRequest = loginRequest;
+    loginRequest.userid = userid;
     loginRequest.username = username;
     loginRequest.password = password;
     message.type = CMConstants.LOGINREQUEST;
@@ -137,7 +142,7 @@ MessageFactory.createLoginResponse = function(sequence,result,errorDescription){
     loginResponse.errorDescription = errorDescription;
     message.type = CMConstants.LOGINRESPONSE;
     message.sequence = sequence;
-    message.request = request;
+    message.response = response;
     return message;
 }
 
@@ -145,7 +150,9 @@ var MessageHandler = {
     init : init,
     encode : encode,
     decode : decode,
-    CMBaseHandler : CMBaseHandler,
+    execute : function(con,message){
+        return CMBaseHandler.execute(con,message);
+    },
     CMLoginRequestHandler : CMLoginRequestHandler,
     CMLoginResponseHandler : CMLoginResponseHandler,
     CMConstants : CMConstants,

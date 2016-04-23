@@ -1,7 +1,8 @@
 message LoginRequest
 {
-	required string username = 1;
-	required string password = 2;
+	required string userid =1;
+	required string username = 2;
+	required string password = 3;
 }
 message LoginResponse 
 {
